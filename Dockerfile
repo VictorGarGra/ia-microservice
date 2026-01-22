@@ -1,10 +1,17 @@
-FROM python:3.10-slim
+FROM python:3.11-slim
 
 WORKDIR /app
+
+# Evita archivos .pyc y buffer
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# Comando optimizado para Cloud Run
-CMD exec uvicorn main:app --host 0.0.0.0 --port $PORT
+# Cloud Run expone este puerto
+EXPOSE 8080
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
