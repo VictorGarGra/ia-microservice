@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+import os
+import uvicorn
 import joblib
 
 # 1. Inicializamos la aplicación FastAPI
@@ -39,3 +41,8 @@ def predict_sentiment(review: ReviewText):
 @app.get("/")
 def read_root():
     return {"message": "Bienvenido a la API de Análisis de Sentimientos"}
+if __name__ == "__main__":
+    # Cloud Run asigna un puerto dinámico; si no existe, usamos 8080 por defecto
+    port = int(os.environ.get("PORT", 8080))
+    # Es vital usar host 0.0.0.0 para que sea accesible externamente
+    uvicorn.run(app, host="0.0.0.0", port=port)
