@@ -11,7 +11,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copia todo el código de tu proyecto (main.py, modelo, etc.)
 COPY . .
 
-# Comando para iniciar el servidor de FastAPI
-# --host 0.0.0.0 es necesario para que sea accesible en Render
-# --port 10000 es el puerto que Render usa por defecto
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "10000"]
+# Cloud Run usa la variable PORT (por defecto 8080)
+ENV PORT 8080
+
+# Ejecutar la aplicación (suponiendo que usas Flask o FastAPI)
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 main:app
